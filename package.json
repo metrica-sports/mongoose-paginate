@@ -1,12 +1,17 @@
 {
-  "name": "mongoose-paginate",
+  "name": "@metrica-sports/mongoose-paginate",
   "description": "Pagination plugin for Mongoose",
-  "version": "5.0.2",
+  "version": "1.0.0",
   "author": {
+    "name": "Metrica Sports",
+    "email": "info@metrica-sports.com"
+  },
+  "versionForked": "5.0.3",
+  "authorForked": {
     "name": "Edward Hotchkiss",
     "email": "edward@edwardhotchkiss.com"
   },
-  "contributors": [
+  "contributorsForked": [
     {
       "name": "Edward Hotchkiss",
       "email": "edward@edwardhotchkiss.com"
@@ -22,7 +27,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/edwardhotchkiss/mongoose-paginate.git"
+    "url": "https://github.com/metrica-sports/mongoose-paginate"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "license": "MIT",
   "keywords": [
@@ -33,15 +41,18 @@
     "page"
   ],
   "engines": {
-    "node": ">=4.2.4"
+    "node": ">=4.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "bluebird": "3.0.5"
+  },
   "devDependencies": {
-    "mongoose": "4.3.4",
+    "mongoose": "4.2.8",
     "mocha": "2.3.4",
-    "chai": "3.4.1"
+    "chai": "3.4.1",
+    "chai-as-promised": "5.1.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha tests/*.js -R spec --ui bdd --timeout 5000"
+    "test": "./node_modules/.bin/mocha tests/*.js --timeout 5000"
   }
 }
