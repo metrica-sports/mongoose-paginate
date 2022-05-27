@@ -1,6 +1,7 @@
 var Promise = require('bluebird');
 
 /**
+ * @param {Object}              [model]
  * @param {Object}              [query={}]
  * @param {Object}              [options={}]
  * @param {Object|String}         [options.select]
@@ -12,13 +13,11 @@ var Promise = require('bluebird');
  * @param {Number}                [options.page=1]
  * @param {Number}                [options.limit=10]
  * @param {Function}            [callback]
+ * @param {String}            [dbFunctionSuffix]
  *
  * @returns {Promise}
  */
-function paginate(query, options, callback) {
-    query   = query || {};
-    options = Object.assign({}, paginate.options, options);
-
+function _paginate(model, query, options, callback, dbFunctionSuffix = '') {
     var select     = options.select;
     var sort       = options.sort;
     var populate   = options.populate;
@@ -42,16 +41,16 @@ function paginate(query, options, callback) {
 
     var promises = {
         docs:  Promise.resolve([]),
-        count: this.count(query).exec()
+        count: model[`count${dbFunctionSuffix}`](query).exec()
     };
 
     if (limit) {
-        var query = this.find(query)
-                        .select(select)
-                        .sort(sort)
-                        .skip(skip)
-                        .limit(limit)
-                        .lean(lean);
+        var query = model[`find${dbFunctionSuffix}`](query)
+                   .select(select)
+                   .sort(sort)
+                   .skip(skip)
+                   .limit(limit)
+                   .lean(lean);
 
         if (populate) {
             [].concat(populate).forEach(function(item) {
@@ -94,11 +93,36 @@ function paginate(query, options, callback) {
         .asCallback(callback);
 }
 
+function paginate(query, options, callback) {
+    query   = query || {};
+    options = Object.assign({}, paginate.options, options);
+
+    return _paginate(this, query, options, callback)
+}
+
+function paginateDeleted(query, options, callback) {
+    query   = query || {};
+    options = Object.assign({}, paginateDeleted.options, options);
+
+    return _paginate(this, query, options, callback, 'Deleted')
+}
+
+function paginateWithDeleted(query, options, callback) {
+    query   = query || {};
+    options = Object.assign({}, paginateWithDeleted.options, options, 'WithDeleted');
+
+    return _paginate(this, query, options, callback)
+}
+
 /**
  * @param {Schema} schema
  */
 module.exports = function(schema) {
     schema.statics.paginate = paginate;
+    schema.statics.paginateDeleted = paginateDeleted;
+    schema.statics.paginateWithDeleted = paginateWithDeleted;
 };
 
 module.exports.paginate = paginate;
+module.exports.paginateDeleted = paginateDeleted;
+module.exports.paginateWithDeleted = paginateWithDeleted;
