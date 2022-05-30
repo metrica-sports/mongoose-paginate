@@ -109,9 +109,9 @@ function paginateDeleted(query, options, callback) {
 
 function paginateWithDeleted(query, options, callback) {
     query   = query || {};
-    options = Object.assign({}, paginateWithDeleted.options, options, 'WithDeleted');
+    options = Object.assign({}, paginateWithDeleted.options, options);
 
-    return _paginate(this, query, options, callback);
+    return _paginate(this, query, options, callback, 'WithDeleted');
 }
 
 /**
